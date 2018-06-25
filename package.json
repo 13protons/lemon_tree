@@ -1,0 +1,21 @@
+{
+  "name": "serialmon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ./lib/*.spec.js -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@turf/turf": "^5.1.6",
+    "chai": "^4.1.2",
+    "express": "^4.16.3",
+    "line-by-line": "^0.1.6",
+    "lodash": "^4.17.5",
+    "mocha": "^5.2.0",
+    "serialport": "^6.1.1",
+    "socket.io": "^2.1.0"
+  }
+}

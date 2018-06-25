@@ -1,0 +1,346 @@
+
+  {
+    "name": "Woodbridge",
+    "self": {
+      "type": "Feature",
+      "properties": {
+        "type": "location",
+        "name": "Woodbridge"
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -83.077451,
+              42.348434
+            ],
+            [
+              -83.073869,
+              42.349423
+            ],
+            [
+              -83.071768,
+              42.345691
+            ],
+            [
+              -83.075422,
+              42.344734
+            ],
+            [
+              -83.077451,
+              42.348434
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "48e5d33fa646ba49ade13508829fe620"
+    },
+    "center": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.0746275,
+          42.3470705
+        ]
+      }
+    },
+    "envelope": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -83.077451,
+              42.344734
+            ],
+            [
+              -83.071768,
+              42.344734
+            ],
+            [
+              -83.071768,
+              42.349423
+            ],
+            [
+              -83.077451,
+              42.349423
+            ],
+            [
+              -83.077451,
+              42.344734
+            ]
+          ]
+        ]
+      }
+    },
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "type": "line",
+          "name": "lap"
+        },
+        "geometry": {
+          "coordinates": [
+            [
+              -83.074956,
+              42.347141
+            ],
+            [
+              -83.074227,
+              42.347371
+            ]
+          ],
+          "type": "LineString"
+        },
+        "id": "269f0c9e2bd70bb97ab98bdb7f3b61e4"
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "type": "road",
+          "name": "racetrack"
+        },
+        "geometry": {
+          "coordinates": [
+            [
+              -83.073835,
+              42.345977
+            ],
+            [
+              -83.075036,
+              42.345625
+            ],
+            [
+              -83.076017,
+              42.347313
+            ],
+            [
+              -83.073727,
+              42.348025
+            ],
+            [
+              -83.074172,
+              42.348796
+            ],
+            [
+              -83.075262,
+              42.348447
+            ],
+            [
+              -83.073833,
+              42.345983
+            ]
+          ],
+          "type": "LineString"
+        },
+        "id": "2dbe9971be55b8e8fb9fb805b8684636"
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "type": "location",
+          "name": "Woodbridge"
+        },
+        "geometry": {
+          "coordinates": [
+            [
+              [
+                -83.077451,
+                42.348434
+              ],
+              [
+                -83.073869,
+                42.349423
+              ],
+              [
+                -83.071768,
+                42.345691
+              ],
+              [
+                -83.075422,
+                42.344734
+              ],
+              [
+                -83.077451,
+                42.348434
+              ]
+            ]
+          ],
+          "type": "Polygon"
+        },
+        "id": "48e5d33fa646ba49ade13508829fe620"
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "type": "corner",
+          "name": 2,
+          "curve": 90
+        },
+        "geometry": {
+          "coordinates": [
+            -83.075051,
+            42.345628
+          ],
+          "type": "Point"
+        },
+        "id": "4d0e55576bfa6d65bf87236ae067a5d7"
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "type": "corner",
+          "name": 6,
+          "angle": 90
+        },
+        "geometry": {
+          "coordinates": [
+            -83.075255,
+            42.348446
+          ],
+          "type": "Point"
+        },
+        "id": "52aba3e7feb8fd86c0d8813c08073f17"
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "type": "corner",
+          "name": "1",
+          "curve": 90
+        },
+        "geometry": {
+          "coordinates": [
+            -83.073816,
+            42.345989
+          ],
+          "type": "Point"
+        },
+        "id": "620f941dee1c373e1ab3c1f6e22716b5"
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "type": "corner",
+          "name": 3,
+          "curve": 90
+        },
+        "geometry": {
+          "coordinates": [
+            -83.076019,
+            42.347329
+          ],
+          "type": "Point"
+        },
+        "id": "8828e07a6f96f41895204625a40140b0"
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "type": "area",
+          "name": "paddock"
+        },
+        "geometry": {
+          "coordinates": [
+            [
+              [
+                -83.075053,
+                42.347476
+              ],
+              [
+                -83.074485,
+                42.347653
+              ],
+              [
+                -83.0742,
+                42.347115
+              ],
+              [
+                -83.074742,
+                42.346964
+              ],
+              [
+                -83.075053,
+                42.347476
+              ]
+            ]
+          ],
+          "type": "Polygon"
+        },
+        "id": "92ddaee3f8f044b4d46910d6c8352f05"
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "type": "corner",
+          "name": 5,
+          "curve": 90
+        },
+        "geometry": {
+          "coordinates": [
+            -83.074162,
+            42.348807
+          ],
+          "type": "Point"
+        },
+        "id": "980c796ec4ad26bf3d97ebbab878eb60"
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "type": "corner",
+          "name": 4,
+          "curve": 90
+        },
+        "geometry": {
+          "coordinates": [
+            -83.0737,
+            42.348032
+          ],
+          "type": "Point"
+        },
+        "id": "d66f31d05869a7f18da7881cd6d04545"
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "type": "area",
+          "name": "approach"
+        },
+        "geometry": {
+          "coordinates": [
+            [
+              [
+                -83.07476,
+                42.347114
+              ],
+              [
+                -83.075125,
+                42.347738
+              ],
+              [
+                -83.074663,
+                42.347876
+              ],
+              [
+                -83.07436,
+                42.347246
+              ],
+              [
+                -83.07476,
+                42.347114
+              ]
+            ]
+          ],
+          "type": "Polygon"
+        },
+        "id": "ff8c688cd4079e2182d0ecae24dfceb4"
+      }
+    ]
+  }

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Race Setup</title>
+  <link href='/styles/picnic.min.css' rel='stylesheet' />
+  <style>
+  </style>
+</head>
+
+<body>
+  <div id="main">
+    <div class="flex">
+      <div>
+        <button @click="start" class='success'>Start Race</button>
+        <button @click="stop" class='error'>Stop Race</button><br>
+        <input v-model="portName">
+        <hr>
+        <button @click="playback_select">Playback</button>
+        <hr>
+        <code>
+          <pre>{{ race | pretty }}</pre>
+        </code>
+      </div>
+    </div>
+  </div>
+
+  <script src="/scripts/vue.js"></script>
+  <script src="/scripts/axios.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    new Vue({
+      el: '#main',
+      data: function () {
+        return {
+          socket: io('/'),
+          portName: '/dev/cu.usbmodem1411',
+          didSync: false,
+          race: {
+            laps: {
+              current: 0,
+              near: false,
+              last: 0,
+              min: 0,
+              max: 0,
+              history: []
+            },
+            pit: {
+              active: false,
+              near: false,
+              last: 0,
+              min: 0,
+              max: 0,
+              history: []
+            },
+            vehicle: {
+              inPit: false,
+              distance: 0,
+              name: '',
+              color: '',
+              location: [],
+              speed: 0,
+              heading: 0
+            },
+            active: false,
+            location: {},
+            approachGeometry: {},
+            pitGeometry: {},
+            startLine: {},
+            startTime: 0
+          }
+        }
+      },
+      mounted: function () {
+ 
+        this.socket.on('update', function (data) {
+
+        });
+      },
+      methods: {
+        start: function() {
+          console.log('should start');
+          this.socket.emit('admin', {
+            msg: 'start',
+            portName: this.portName
+          });
+        },
+        stop: function () {
+          console.log('should stop');
+          this.socket.emit('admin', {msg: 'stop'});
+        },
+        playback_select: function () {
+          console.log('should select playback');
+          // this.socket.emit('admin', 'start');
+          axios.get('/datafiles')
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        }
+      },
+      filters: {
+        pretty: function (value) {
+          return JSON.stringify(JSON.parse(JSON.stringify(value)), null, 2);
+        }
+      }
+
+    })
+
+  </script>
+</body>
+
+</html>

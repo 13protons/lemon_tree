@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Socket.IO Chat Example</title>
+  <style>
+    .container {
+      width: 300px;
+      height: 300px;
+      position: relative;
+      perspective: 1000px;
+      margin: 6em auto;
+      
+    }
+
+    #cube {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+      transform: translateZ( -150px );
+    }
+
+    #cube figure {
+      margin: 0;
+      width: 300px;
+      height: 300px;
+      display: block;
+      position: absolute;
+      border: 2px solid #333366;
+      box-sizing: border-box;
+
+    }
+    #cube figure span{
+      display: block;
+      width: 100%;
+      padding-top: .5em;
+      font-size: 8em;
+      text-align: center;
+      font-family: sans-serif;
+      font-weight: bold;
+      color: white;
+      /* padding-top: .9em; */
+    }
+
+    #cube .front {transform: rotateY(0deg) translateZ(150px);  background-color: rgba(255,0,0,.7);}
+    #cube .back   { transform: rotateX( 180deg ) rotateZ(180deg) translateZ( 150px ); background-color: rgba(0,255,0,.7);}
+    #cube .right  { transform: rotateY(  90deg ) translateZ( 150px ); background-color: rgba(0,0,255,.7);}
+    #cube .left   { transform: rotateY( -90deg ) translateZ( 150px ); background-color: rgba(255,255,0,.7);}
+    #cube .top    { transform: rotateX(  90deg ) translateZ( 150px ); background-color: rgba(255,0,255,.7);}
+    #cube .bottom { transform: rotateX( -90deg ) translateZ( 150px ); background-color: rgba(0,255,255,.7);}
+  </style>
+</head>
+
+<body>
+  <div id="main">
+    <p>Orientation: x: {{ euler[1] }}, y: {{ euler[0] }}, z: {{ euler[2] }}</p>
+
+  </div>
+  <section class="container">
+    <div id="cube">
+      <figure class="front"><span>1</span></figure>
+      <figure class="back"><span>2</span></figure>
+      <figure class="right"><span>3</span></figure>
+      <figure class="left"><span>4</span></figure>
+      <figure class="top"><span>5</span></figure>
+      <figure class="bottom"><span>6</span></figure>
+    </div>
+  </section>
+  
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    new Vue({
+      el: '#main',
+      data: function(){
+        return {
+          euler: []
+        }
+      },
+      mounted: function(){
+        var socket = io('/');
+        var self = this;
+        var dummy = document.getElementById("cube");
+        socket.on('update', function (data) {
+          let euler = data.euler;
+          let trans = `rotateX(${euler[1]}deg) rotateY(${euler[0]}deg) rotateZ(${euler[2]}deg)`
+          dummy.style.transform = trans;
+          
+          self.euler = euler;
+        });
+      }
+
+    })
+    
+  </script>
+</body>
+
+</html>

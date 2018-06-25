@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Socket.IO Chat Example</title>
+  <script src='/scripts/mapbox-gl.js'></script>
+  <link href='/styles/mapbox-gl.css' rel='stylesheet' />
+
+  <style>
+  </style>
+</head>
+
+<body>
+  <div id="main">
+    <p>Lap # {{race.laps.current}} - Speed: {{race.vehicle.speed}}</p>
+    <h1 v-if="race.vehicle.inPit">Pit Stop</h1>
+  </div>
+  <section class="container">
+    <div id='map' style='width: 100%; height: 500px;'></div>
+    <script>
+      mapboxgl.accessToken = 'pk.eyJ1IjoiMTNwcm90b25zIiwiYSI6ImViN2ZiYTgxN2Y2MDRiZDY0ZDM5MGVhODM4M2Y0MDU2In0._FjwlF00n_W_k2GBaUnCHQ';
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/13protons/cjie13jf50fs32sqah41p970v',
+        center: [-83.07495, 42.34730],
+        zoom: 15.5
+      });
+
+    </script>
+  </section>
+
+  <script src="/scripts/vue.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    new Vue({
+      el: '#main',
+      data: function () {
+        return {
+          race: {
+            laps: {},
+            vehicle: {},
+            pit: {}
+          }
+        }
+      },
+      mounted: function () {
+        var socket = io('/');
+        var self = this;
+        // socket.on('radio_0', function (data) {
+        //   console.log(data);
+
+
+        // });
+        socket.on('vehicle', updateVehicle);
+        socket.on('laps', updateLaps);
+        socket.on('pit', updatePit);
+        
+        function updateVehicle(data) {
+          // console.log('vehicle status', data);
+          var vehicleLayer = map.getSource('vehicle');
+
+          if (!vehicleLayer) {
+            setupVehicle(data);
+          } else {
+            vehicleLayer.setData(data.location);
+          }
+          self.race.vehicle = Object.assign({}, self.race.vehicle, data);
+        }
+
+        function updateLaps(data) {
+          console.log('lap', data);
+          self.race.laps = Object.assign({}, self.race.laps, data);
+        }
+
+        function updatePit(data) {
+          console.log('lap', data);
+          self.race.pit = Object.assign({}, self.race.pit, data);
+        }
+
+        function setupVehicle(data) {
+          console.log('add vehicle!');
+          map.addSource('vehicle', {
+            type: 'geojson',
+            data: data.location
+          });
+
+          map.addLayer({
+            "id": "vehicle",
+            "source": "vehicle",
+            "type": "circle",
+            "paint": {
+              "circle-radius": 10,
+              "circle-color": "#007cbf"
+            }
+          });
+        }
+      }
+
+    })
+  </script>
+</body>
+
+</html>
