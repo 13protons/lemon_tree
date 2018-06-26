@@ -6,56 +6,221 @@
   <title>Socket.IO Chat Example</title>
   <script src='/scripts/mapbox-gl.js'></script>
   <link href='/styles/mapbox-gl.css' rel='stylesheet' />
+  <link href='/styles/picnic.min.css' rel='stylesheet' />
 
   <style>
+    div {
+      box-sizing: border-box;
+    }
+
+    #main {
+      padding: 0 1em;
+    }
+
+    .list {
+      height: 30vh;
+    }
+
+    .title {
+      height: 8vh;
+    }
+
+    .speedo {
+      font-size: 72px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .speedo .units {
+      font-size: 24px;
+    }
+
+    .stats,
+    .list,
+    #map {
+      padding: 1em;
+    }
+
+    #map {
+      height: 60vh;
+      border: 1px solid #aaa;
+      padding: 0;
+    }
   </style>
 </head>
 
 <body>
   <div id="main">
-    <p>Lap # {{race.laps.current}} - Speed: {{race.vehicle.speed}}</p>
+    <!-- <p>Lap # {{race.laps.current}} - Speed: {{race.vehicle.speed}}</p>
     <h1 v-if="race.vehicle.inPit">Pit Stop</h1>
-  </div>
-  <section class="container">
-    <div id='map' style='width: 100%; height: 500px;'></div>
-    <script>
-      mapboxgl.accessToken = 'pk.eyJ1IjoiMTNwcm90b25zIiwiYSI6ImViN2ZiYTgxN2Y2MDRiZDY0ZDM5MGVhODM4M2Y0MDU2In0._FjwlF00n_W_k2GBaUnCHQ';
-      var map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/13protons/cjie13jf50fs32sqah41p970v',
-        center: [-83.07495, 42.34730],
-        zoom: 15.5
-      });
+    <section class="container">
+      <div id='notmap'></div>
+    </section> -->
 
-    </script>
-  </section>
+    <div class="flex demo">
+      <div class="title full">
+        <span>The Lemon Tree</span>
+      </div>
+      <div class="stats third">
+        <div class="speedo">{{race.vehicle.speed | knotsToMph}}
+          <span class="units">mph</span>
+        </div>
+        <div class="lapTime">current lap Time</div>
+
+        <div class="settings">
+
+          <p>Map Style</p>
+          <button>Follow</button>
+          <button class='success'>Birds Eye</button>
+
+          <p>Track</p>
+          <select v-if="tracks.length > 0" v-model="currentTrack" @change="updateCenter">
+            <option v-for="name in trackNames" :selected="name === currentTrack">{{name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex two-third">
+        <div id="map" class="full"></div>
+        <div class="list half">
+          <table>
+
+              <tr v-for="(time, index) in reverse(race.laps.times)">
+                <td>Lap {{race.laps.times.length - index}}</td>
+                <td>{{time | humanTime}}</td>
+              </tr>
+              
+          </table>
+        </div>
+        <div class="list half">
+          <table>
+
+              <tr v-for="(time, index) in reverse(race.pit.times)">
+                <td>Stop {{race.pit.times.length - index}}</td>
+                <td>{{time | humanTime}}</td>
+              </tr>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
 
   <script src="/scripts/vue.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
+    var map;
+
     new Vue({
       el: '#main',
       data: function () {
         return {
+          tracks: [],
+          currentTrack: "Woodbridge",
           race: {
-            laps: {},
-            vehicle: {},
-            pit: {}
+            "laps":
+              { "current": 2, "last": 163398.8916015625, "min": 141754.45849609375, "max": 163398.8916015625, "times": [141754.45849609375, 163398.8916015625, 141754.45849609375, 163398.8916015625, 141754.45849609375, 163398.8916015625, 141754.45849609375, 163398.8916015625, 141754.45849609375, 163398.8916015625] },
+            "vehicle": {
+              "inPit": true,
+              "distance": 2.903346305668442,
+              "name": "Ghost Rider", "color": "transparent", "location": { "type": "Feature", "properties": {}, "geometry": { "type": "Point", "coordinates": [-83.07466, 42.34731] } }, "inApproach": true, "speed": 0, "heading": 163.87
+            },
+            "pit": { 
+              "active": true, 
+              "total": 1, 
+              "last": 26033, "min": 26033, "max": 26033, "times": [26033] }
           }
         }
       },
+      filters: {
+        humanTime: function(value) {
+          var minutes = value / 60000;
+          var sec = ((minutes - parseInt(minutes)) * 60).toFixed(2);
+          return parseInt(minutes) + ':' + sec;
+        },
+        reverse: function(arr) {
+          return arr.slice().reverse();
+        },
+        knotsToMph: function(knot) {
+          return (knot * 1.15078).toFixed(1);
+        }
+      },
+      watch: {
+        currentTrack: function(newVal, oldVal){
+          console.log('changed track', oldVal, newVal);
+        }
+      },
+      computed: {
+        trackNames: function() {
+          return this.tracks.map(function(track){
+            return track.name;
+          })
+        }
+      },
+      methods: {
+        reverse: function (arr) {
+          return arr.slice().reverse();
+        },
+        updateCenter: function() {
+          console.log('update map center');
+        },
+        drawTracks: function() {
+          this.tracks.forEach(function(track){
+            var road = track.features.find(function(feature){
+              return feature.properties.name === 'racetrack';
+            })
+            console.log('a track', track.name, road);
+            map.addLayer({
+              "id": track.name,
+              "type": "line",
+              "source": {
+                type: 'geojson',
+                data: JSON.parse(JSON.stringify(road)),
+                layout: {
+                  "line-join": "round",
+                  "line-cap": "round"
+                },
+                paint: {
+                  "line-color": "yellow",
+                  "line-width": 8
+                }
+              }
+            });
+          })
+          
+        }
+      },
       mounted: function () {
+        
+        mapboxgl.accessToken = 'pk.eyJ1IjoiMTNwcm90b25zIiwiYSI6ImViN2ZiYTgxN2Y2MDRiZDY0ZDM5MGVhODM4M2Y0MDU2In0._FjwlF00n_W_k2GBaUnCHQ';
+        map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/13protons/cjie13jf50fs32sqah41p970v',
+          center: [-83, 42],
+          zoom: 5
+        });
+
+
         var socket = io('/');
         var self = this;
-        // socket.on('radio_0', function (data) {
-        //   console.log(data);
-
-
-        // });
+        map.on('load', function () {
+          fetch('/data/tracks.json')
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (tracks) {
+            self.tracks = tracks;
+            self.drawTracks();
+            self.updateCenter();
+          })
+          .catch(function (err) { console.error('problem getting tracks', err); })
+        });
+          
         socket.on('vehicle', updateVehicle);
         socket.on('laps', updateLaps);
         socket.on('pit', updatePit);
-        
+
         function updateVehicle(data) {
           // console.log('vehicle status', data);
           var vehicleLayer = map.getSource('vehicle');
@@ -69,12 +234,13 @@
         }
 
         function updateLaps(data) {
-          console.log('lap', data);
+          // console.log('lap', data);
           self.race.laps = Object.assign({}, self.race.laps, data);
         }
 
         function updatePit(data) {
-          console.log('lap', data);
+          console.log('pit', data);
+          console.log('race', self.race);
           self.race.pit = Object.assign({}, self.race.pit, data);
         }
 

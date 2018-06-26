@@ -86,6 +86,7 @@ io.on('connection', function (socket) {
 });
 
 app.use(express.static('public'))
+app.use('/data', express.static('races'))
 
 server.listen(3000);
 
