@@ -106,7 +106,7 @@
     </div>
   </div>
 
-
+  <script src="/scripts/lodash.min.js"></script>
   <script src="/scripts/vue.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
@@ -163,6 +163,12 @@
           return arr.slice().reverse();
         },
         updateCenter: function() {
+          var self = this;
+          var trackName = _.snakeCase(this.currentTrack);
+          // map.fitBounds(event.layer.getBounds());
+          var track = this.tracks.find(function (track) {
+            return track.name === self.currentTrack;
+          });
           console.log('update map center');
         },
         drawTracks: function() {
@@ -171,20 +177,24 @@
               return feature.properties.name === 'racetrack';
             })
             console.log('a track', track.name, road);
+            var trackName = _.snakeCase(track.name);
+
+            map.addSource(trackName, {
+              type: 'geojson',
+              data: JSON.parse(JSON.stringify(road))
+            });
+
             map.addLayer({
-              "id": track.name,
+              "id": trackName,
               "type": "line",
-              "source": {
-                type: 'geojson',
-                data: JSON.parse(JSON.stringify(road)),
-                layout: {
-                  "line-join": "round",
-                  "line-cap": "round"
-                },
-                paint: {
-                  "line-color": "yellow",
-                  "line-width": 8
-                }
+              "source": trackName,
+              layout: {
+                "line-join": "round",
+                "line-cap": "round"
+              },
+              paint: {
+                "line-color": "red",
+                "line-width": 6
               }
             });
           })
@@ -215,11 +225,13 @@
             self.updateCenter();
           })
           .catch(function (err) { console.error('problem getting tracks', err); })
+
+          socket.on('vehicle', updateVehicle);
+          socket.on('laps', updateLaps);
+          socket.on('pit', updatePit);
         });
           
-        socket.on('vehicle', updateVehicle);
-        socket.on('laps', updateLaps);
-        socket.on('pit', updatePit);
+        
 
         function updateVehicle(data) {
           // console.log('vehicle status', data);
